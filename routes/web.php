@@ -32,10 +32,12 @@ Route::controller(\App\Http\Controllers\Frontend\AuthController::class)->group(f
 Route::group(['prefix' => 'user', 'as' => 'user.', 'middleware' => 'auth'], function (){
 
     Route::controller(\App\Http\Controllers\Frontend\UserController::class)->group(function (){
-
         Route::get('/dashboard', 'dashboard')->name('dashboard');
+    });
 
-
+    //deposit
+    Route::controller(\App\Http\Controllers\Frontend\DepositController::class)->group(function (){
+       Route::get('deposits', 'deposit_list')->name('deposit_list');
     });
 
 });
@@ -81,6 +83,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function (){
 
         //coupon routes
         Route::resource('coupons', \App\Http\Controllers\Backend\CouponController::class);
+
+        //offline payment method
+        Route::resource('offline-payment-method', \App\Http\Controllers\Backend\OfflinePaymentMethodController::class);
+
+        //online payment method
+        Route::controller(\App\Http\Controllers\Backend\OnlinePaymentMethodController::class)->group(function (){
+            Route::get('online-payment-methods', 'online_payment_method')->name('online_payment_method');
+            Route::post('online-payment-methods/update', 'online_payment_method_update')->name('online_payment_method_update');
+        });
 
         //settings
         Route::match(['get', 'post'], 'website-settings', [\App\Http\Controllers\Backend\SettingController::class, 'website_settings'])->name('website_settings');

@@ -19,7 +19,8 @@ class SettingController extends Controller
                 'copyright_text' => 'required',
                 'currency_name' => 'required',
                 'currency_symbol' => 'required',
-                'email_verification' => 'required',
+                'online_payment_status' => 'required',
+                'offline_payment_status' => 'required',
                 'logo' => 'mimes:jpeg,jpg,png,gif,PNG|max:2048',
                 'favicon' => 'mimes:jpeg,jpg,png,gif,PNG|max:2048',
             ]);
@@ -44,6 +45,12 @@ class SettingController extends Controller
             ]);
             Setting::updateOrInsert(['key' => 'currency_symbol'], [
                 'value' => $request['currency_symbol']
+            ]);
+            Setting::updateOrInsert(['key' => 'online_payment_status'], [
+                'value' => $request['online_payment_status']
+            ]);
+            Setting::updateOrInsert(['key' => 'offline_payment_status'], [
+                'value' => $request['offline_payment_status']
             ]);
             Setting::updateOrInsert(['key' => 'email_verification'], [
                 'value' => $request['email_verification']

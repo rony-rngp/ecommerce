@@ -1,6 +1,9 @@
 <ul class="nav nav-tabs mb-6" role="tablist">
     <li class="nav-item">
-        <a href="{{ route('user.dashboard') }}" class="nav-link active">Dashboard</a>
+        <a href="{{ route('user.dashboard') }}" class="nav-link {{ request()->is('user/dashboard') ? 'active' : '' }}">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('user.deposit_list') }}" class="nav-link {{ request()->is('user/deposits') ? 'active' : '' }}">Deposits</a>
     </li>
     <li class="nav-item">
         <a href="" class="nav-link">Orders</a>

@@ -149,6 +149,20 @@
             </a>
         </li>
 
+        <li class="menu-item {{ request()->is('admin/offline-payment-method*') ? 'active' : '' }}">
+            <a href="{{ route('admin.offline-payment-method.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-money"></i>
+                <div class="text-truncate">Offline Payment Method</div>
+            </a>
+        </li>
+
+        <li class="menu-item {{ request()->is('admin/online-payment-methods*') ? 'active' : '' }}">
+            <a href="{{ route('admin.online_payment_method') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-money"></i>
+                <div class="text-truncate">Online Payment Method</div>
+            </a>
+        </li>
+
 
         <li class="menu-item {{ request()->is('admin/website-settings*')  ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
