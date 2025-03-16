@@ -56,7 +56,7 @@
                                 </div>
 
                                 <div class="mb-4 col-md-6">
-                                    <label class="form-label" for="image">Image <i class="text-danger">*</i></label>
+                                    <label class="form-label" for="image">Image (Height:190px Width:190px)</label>
                                     <input type="file" class="form-control" accept="image/*" name="image" id="image" >
                                     <span class="text-danger">{{ $errors->has('image') ? $errors->first('image') : '' }}</span>
 

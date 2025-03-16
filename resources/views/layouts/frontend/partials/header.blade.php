@@ -2,11 +2,11 @@
     <div class="header-top">
         <div class="container">
             <div class="header-left">
-                <p class="welcome-msg">Welcome to Wolmart Store message or remove it!</p>
+                <p class="welcome-msg">Welcome to {{ get_settings('website_name') }} Store</p>
             </div>
             <div class="header-right">
                 <div class="dropdown">
-                    <a href="#currency">USD</a>
+                    <a href="javascript:void(0)">{{ base_currency_name() }}</a>
                    {{-- <div class="dropdown-box">
                         <a href="#USD">USD</a>
                         <a href="#EUR">EUR</a>
@@ -14,28 +14,12 @@
                 </div>
                 <!-- End of DropDown Menu -->
 
-                <div class="dropdown">
-                    <a href="#language"><img src="{{ asset('frontend') }}/assets/images/flags/eng.png" alt="ENG Flag" width="14"
-                                             height="8" class="dropdown-image" /> ENG</a>
-                    {{--<div class="dropdown-box">
-                        <a href="#ENG">
-                            <img src="{{ asset('frontend') }}/assets/images/flags/eng.png" alt="ENG Flag" width="14" height="8"
-                                 class="dropdown-image" />
-                            ENG
-                        </a>
-                        <a href="#FRA">
-                            <img src="{{ asset('frontend') }}/assets/images/flags/fra.png" alt="FRA Flag" width="14" height="8"
-                                 class="dropdown-image" />
-                            FRA
-                        </a>
-                    </div>--}}
-                </div>
                 <!-- End of Dropdown Menu -->
                 <span class="divider d-lg-show"></span>
-                <a href="#" class="d-lg-show">Blog</a>
                 <a href="#" class="d-lg-show">Contact Us</a>
                 @if(\Illuminate\Support\Facades\Auth::check())
                 <a href="{{ route('user.dashboard') }}" class="d-lg-show">My Account</a>
+                <a href="{{ route('user.dashboard') }}" class="d-lg-show">Balance: {{ base_currency().auth()->user()->balance }}</a>
                 @else
                 <a href="{{ route('login') }}" class="d-lg-show login sign-in"><iclass="w-icon-account"></i>Sign In</a>
                 <span class="delimiter d-lg-show">/</span>
@@ -54,17 +38,17 @@
                 <a href="{{ url('/') }}" class="logo ml-lg-0">
                     <img src="{{ asset('frontend') }}/assets/images/logo.png" alt="logo" width="144" height="45" />
                 </a>
-                <form method="get" action="#"
+                <form method="get" action="{{ route('category_product') }}"
                       class="header-search hs-expanded hs-round d-none d-md-flex input-wrapper">
                     <div class="select-box">
                         <select id="category" name="category">
-                            <option value="0">All Categories</option>
+                            <option value="">All Categories</option>
                             @foreach($app_categories as $app_category)
-                            <option value="{{ $app_category->id }}">{{ $app_category->name }}</option>
+                            <option {{ old('category') == $app_category->slug ? 'selected' : '' }} value="{{ $app_category->slug }}">{{ $app_category->name }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <input type="text" class="form-control" name="search" id="search" placeholder="Search in..."
+                    <input type="text" class="form-control" autocomplete="off" name="search" value="{{ old('search') }}" id="search" placeholder="Search in..."
                            required />
                     <button class="btn btn-search" type="submit"><i class="w-icon-search"></i>
                     </button>
@@ -83,9 +67,9 @@
                     <i class="w-icon-heart"></i>
                     <span class="wishlist-label d-lg-show">Wishlist</span>
                 </a>
-                <a class="compare label-down link d-xs-show" href="#">
-                    <i class="w-icon-compare"></i>
-                    <span class="compare-label d-lg-show">Compare</span>
+                <a class="wishlist label-down link d-xs-show" href="{{ route('user.dashboard') }}">
+                    <i class="w-icon-user"></i>
+                    <span class="wishlist-label d-lg-show">Account</span>
                 </a>
 
                 <style>
@@ -252,13 +236,13 @@
                             <ul class="menu vertical-menu category-menu">
                                 @foreach($app_categories as $category)
                                 <li>
-                                    <a href="#">
+                                    <a href="{{ route('category_product', ['category' => $category->slug]) }}">
                                         <i class="{{ $category->icon }}"></i>{{ $category->name }}
                                     </a>
                                     @if($category->subcategories != null && $category->subcategories->count() > 0)
                                     <ul>
                                         @foreach($category->subcategories as $subcategory)
-                                        <li><a href="#">{{ $subcategory->name }}</a></li>
+                                        <li><a href="{{ route('category_product', ['category' => $category->slug, 'subcategory' => $subcategory->slug]) }}">{{ $subcategory->name }}</a></li>
                                         @endforeach
                                     </ul>
                                     @endif
@@ -271,7 +255,7 @@
                                     </a>
                                 </li>--}}
                                 <li>
-                                    <a href=""
+                                    <a href="{{ route('category_product') }}"
                                        class="font-weight-bold text-primary text-uppercase ls-25">
                                         View All Categories<i class="w-icon-angle-right"></i>
                                     </a>
@@ -284,8 +268,8 @@
                             <li class="{{ request()->is('/') ? 'active' : '' }}">
                                 <a href="{{ url('/') }}">Home</a>
                             </li>
-                            <li class="">
-                                <a href="">Shop</a>
+                            <li class="{{ request()->is('products*') ? 'active' : '' }}">
+                                <a href="{{ route('category_product') }}">Shop</a>
                             </li>
 
                             <li class="">
@@ -322,10 +306,106 @@
                     </nav>
                 </div>
                 <div class="header-right">
-                    <a href="#" class="d-xl-show"><i class="w-icon-map-marker mr-1"></i>Track Order</a>
-                    <a href="#"><i class="w-icon-sale"></i>Daily Deals</a>
+                    <a href="javascript:void(0)" class="d-xl-show scrollDiv"><i class="w-icon-map-marker mr-1"></i>Track Order</a>
+                    <a href="javascript:void(0)" onclick="scrollToDiv()"><i class="w-icon-sale"></i>Daily Deals</a>
                 </div>
             </div>
         </div>
     </div>
 </header>
+
+
+<!-- Start of Mobile Menu -->
+<div class="mobile-menu-wrapper">
+    <div class="mobile-menu-overlay"></div>
+    <!-- End of .mobile-menu-overlay -->
+
+    <a href="#" class="mobile-menu-close"><i class="close-icon"></i></a>
+    <!-- End of .mobile-menu-close -->
+
+    <div class="mobile-menu-container scrollable">
+        <form action="{{ route('category_product') }}" method="get" class="input-wrapper">
+            <input type="text" class="form-control" value="{{ old('search') }}" name="search" autocomplete="off" placeholder="Search"
+                   required />
+            <button class="btn btn-search" type="submit">
+                <i class="w-icon-search"></i>
+            </button>
+        </form>
+        <!-- End of Search Form -->
+        <div class="tab">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a href="#main-menu" class="nav-link active">Main Menu</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#categories" class="nav-link">Categories</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane active" id="main-menu">
+                <ul class="mobile-menu">
+                    <li>
+                        <a style="color:{{ request()->is('/') ? '#1914fe' : '' }}" href="{{ url('/') }}">Home</a>
+                    </li>
+                    <li>
+                        <a style="color:{{ request()->is('product*') ? '#1914fe' : '' }} " href="{{ route('category_product') }}">Shop</a>
+                    </li>
+                    <li class="">
+                        <a href="">Blog</a>
+                    </li>
+                    <li class="">
+                        <a href="">Contact US</a>
+                    </li>
+
+                    @if(!\Illuminate\Support\Facades\Auth::check())
+                        <li>
+                            <a style="color:{{ request()->is('login') ? '#1914fe' : '' }}" href="{{ route('login') }}">Login</a>
+                        </li>
+
+                        <li>
+                            <a style="color:{{ request()->is('register') ? '#1914fe' : '' }}" href="{{ route('register') }}?refer_code=UPN4YES0">Register</a>
+                        </li>
+                    @else
+                        <li>
+                            <a style="color:{{ request()->is('user/dashboard') ? '#1914fe' : '' }}" href="{{ route('user.dashboard') }}">My Account</a>
+                        </li>
+                        <li class="">
+                            <a href="{{ route('user.dashboard') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Logout</a>
+
+                            <form id="logout-form" action="{{ route('user.logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+
+                        </li>
+                    @endif
+                </ul>
+            </div>
+            <div class="tab-pane" id="categories">
+                <ul class="mobile-menu">
+                    @foreach($app_categories as $category)
+                        <li>
+                            <a href="{{ route('category_product', ['category' => $category->slug]) }}">
+                                <i class="{{ $category->icon }}"></i>{{ $category->name }}
+                            </a>
+                            @if($category->subcategories != null && $category->subcategories->count() > 0)
+                                <ul>
+                                    @foreach($category->subcategories as $subcategory)
+                                        <li><a href="{{ route('category_product', ['category' => $category->slug, 'subcategory' => $subcategory->slug]) }}">{{ $subcategory->name }}</a></li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </li>
+                    @endforeach
+                        <li>
+                            <a href="{{ route('category_product') }}"
+                               class="font-weight-bold text-primary text-uppercase ls-25">
+                                View All Categories<i class="w-icon-angle-right"></i>
+                            </a>
+                        </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Mobile Menu -->

@@ -28,6 +28,8 @@
                                 <th>Price</th>
                                 <th>Discount</th>
                                 <th>Stock</th>
+                                <th>Featured</th>
+                                <th>Hot Deals</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -39,11 +41,21 @@
                                     <td>
                                         <img class=" object-fit-cover" height="40" width="40" src="{{ $product->image != '' && Storage::disk('public')->exists($product->image) ? asset('storage/'.$product->image) : asset('backend/no_image.png') }}" alt="">
                                     </td>
-                                    <td>{{ \Illuminate\Support\Str::limit($product->name, 40) }}</td>
+                                    <td>{{ \Illuminate\Support\Str::limit($product->name, 35) }}</td>
                                     <td>{{ @$product->category->name }} {{ $product->subcategory != null ? ' → '.$product->subcategory->name : '' }}</td>
                                     <td>{{ base_currency().$product->price }}</td>
                                     <td>{{ $product->discount }}%</td>
                                     <td>{{ $product->has_attribute == 1 ? @$product->attributes->sum('stock') : $product->stock }}</td>
+                                    <td>
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" data-id="{{ $product->id }}" type="checkbox" id="featured" {{ $product->is_featured == 1 ? 'checked' : '' }}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" data-id="{{ $product->id }}" type="checkbox" id="hot_deals" {{ $product->hot_deals == 1 ? 'checked' : '' }}>
+                                        </div>
+                                    </td>
                                     <td><span class="badge bg-{{ $product->status == 1 ? 'success' : 'danger' }}">{{ $product->status == 1 ? 'Active' : 'Inactive' }}</span></td>
                                     <td>
                                         <div class="dropdown">
@@ -85,5 +97,41 @@
 @endsection
 
 @push('js')
+<script>
+    $(document).on('change', '#featured', function () {
+        var id = $(this).attr('data-id');
+        if(this.checked){
+            var featured = 1;
+        }else{
+            var featured = 0;
+        }
 
+        $.ajax({
+            url: "{{ route('admin.products.is_featured') }}",
+            type: "get",
+            data: {product_id : id, is_featured : featured},
+            success: function (result) {
+                console.log(result);
+            }
+        })
+    });
+
+    $(document).on('change', '#hot_deals', function () {
+        var id = $(this).attr('data-id');
+        if(this.checked){
+            var hot_deals = 1;
+        }else{
+            var hot_deals = 0;
+        }
+
+        $.ajax({
+            url: "{{ route('admin.products.hot_deals') }}",
+            type: "get",
+            data: {product_id : id, hot_deals : hot_deals},
+            success: function (result) {
+                console.log(result);
+            }
+        })
+    });
+</script>
 @endpush

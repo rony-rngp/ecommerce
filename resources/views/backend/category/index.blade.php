@@ -26,6 +26,8 @@
                                 <th>Name</th>
                                 <th>Icon</th>
                                 <th>slug</th>
+                                <th>Products</th>
+                                <th>Show Home</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -40,6 +42,12 @@
                                     <td>{{ $category->name }}</td>
                                     <td>{{ $category->icon }}</td>
                                     <td>{{ $category->slug }}</td>
+                                    <td>{{ $category->products_count }}</td>
+                                    <td>
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" data-id="{{ $category->id }}" type="checkbox" id="homePage" {{ $category->show_home_page == 1 ? 'checked' : '' }}>
+                                        </div>
+                                    </td>
                                     <td><span class="badge bg-{{ $category->status == 1 ? 'success' : 'danger' }}">{{ $category->status == 1 ? 'Active' : 'Inactive' }}</span></td>
                                     <td>
                                         <div class="dropdown">
@@ -80,5 +88,23 @@
 @endsection
 
 @push('js')
+<script>
+    $(document).on('change', '#homePage', function () {
+        var id = $(this).attr('data-id');
+        if(this.checked){
+            var show_home_page = 1;
+        }else{
+            var show_home_page = 0;
+        }
 
+        $.ajax({
+            url: "{{ route('admin.categories.show_home_page') }}",
+            type: "get",
+            data: {category_id : id, show_home_page : show_home_page},
+            success: function (result) {
+                console.log(result);
+            }
+        })
+    });
+</script>
 @endpush

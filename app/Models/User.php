@@ -64,4 +64,21 @@ class User extends Authenticatable
 
         return $code;
     }
+
+    public function delivered_orders()
+    {
+        return $this->hasMany(Order::class)->where('status', 'Delivered');
+    }
+
+    public function refers()
+    {
+        return $this->hasMany(User::class, 'refer_by', 'id');
+    }
+
+    /*public function referBonusTransactions()
+    {
+        return $this->hasMany(Transaction::class, 'main_user', 'id')
+            ->where('tran_type', 'refer_bonus');
+    }*/
+
 }

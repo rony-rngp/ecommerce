@@ -13,6 +13,9 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
+        if (Auth::check()){
+            return redirect()->route('user.dashboard');
+        }
         if ($request->isMethod('post')){
 
             $request->validate([
@@ -42,7 +45,7 @@ class AuthController extends Controller
             $request->validate([
                 'name' => 'required',
                 'email' => 'required|email|unique:users,email',
-                'phone' => 'required|min:8|unique:users,phone',
+                'phone' => 'required|numeric|min:8|unique:users,phone',
                 'refer_code' => 'nullable',
                 'password' => 'required|string|min:8|max:32|confirmed',
             ]);

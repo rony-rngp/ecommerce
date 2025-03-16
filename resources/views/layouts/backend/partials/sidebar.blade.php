@@ -135,6 +135,14 @@
             </a>
         </li>
 
+        <li class="menu-item {{ request()->is('admin/deposits*') ? 'active' : '' }}">
+            <a href="{{ route('admin.deposits.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-dollar"></i>
+                <div class="text-truncate">Deposit</div>
+                <div class="badge rounded-pill bg-label-danger text-uppercase fs-tiny ms-auto">{{ \App\Models\Deposit::where('status', 'Pending')->count() }}</div>
+            </a>
+        </li>
+
         <li class="menu-item {{ request()->is('admin/coupons*') ? 'active' : '' }}">
             <a href="{{ route('admin.coupons.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-offer"></i>
@@ -142,10 +150,57 @@
             </a>
         </li>
 
-        <li class="menu-item {{ request()->is('admin/sliders*') ? 'active' : '' }}">
-            <a href="{{ route('admin.sliders.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-image"></i>
-                <div class="text-truncate">Slider</div>
+        <li class="menu-item {{ request()->is('admin/orders*') ? 'active' : '' }}">
+            <a href="{{ route('admin.orders.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-shopping-bag"></i>
+                <div class="text-truncate">Orders</div>
+                <div class="badge rounded-pill bg-label-danger text-uppercase fs-tiny ms-auto">{{ \App\Models\Order::where('is_seen', 0)->count() }}</div>
+            </a>
+        </li>
+
+
+        <li class="menu-item {{ request()->is('admin/withdraw-methods*') || request()->is('admin/withdraws*') ? 'active open' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-money-withdraw"></i>
+                <div class="text-truncate" data-i18n="Dashboards">Withdraw</div>
+                <div class="badge rounded-pill bg-label-danger text-uppercase fs-tiny ms-auto">{{ \App\Models\Withdraw::where('status', 'Pending')->count() }}</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->is('admin/withdraw-methods*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.withdraw-methods.index') }}" class="menu-link">
+                        <div class="text-truncate" data-i18n="Analytics">Withdraw Method</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ request()->is('admin/withdraws*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.withdraws.index') }}" class="menu-link">
+                        <div class="text-truncate" data-i18n="Analytics">Withdraws List</div>
+                        <div class="badge rounded-pill bg-label-danger text-uppercase fs-tiny ms-auto">{{ \App\Models\Withdraw::where('status', 'Pending')->count() }}</div>
+
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item {{ request()->is('admin/users*') ? 'active' : '' }}">
+            <a href="{{ route('admin.users.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div class="text-truncate">Users</div>
+            </a>
+        </li>
+
+        <li class="menu-item {{ request()->is('admin/transactions*') ? 'active' : '' }}">
+            <a href="{{ route('admin.transactions') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-dollar"></i>
+                <div class="text-truncate">Transaction Log</div>
+            </a>
+        </li>
+
+        <li class="menu-item {{ request()->is('admin/reviews*') ? 'active' : '' }}">
+            <a href="{{ route('admin.reviews.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-star"></i>
+                <div class="text-truncate">Reviews </div>
+                <div class="badge rounded-pill bg-label-danger text-uppercase fs-tiny ms-auto">{{ \App\Models\ProductReview::where('status', 0)->count() }}</div>
+
             </a>
         </li>
 
@@ -164,12 +219,31 @@
         </li>
 
 
-        <li class="menu-item {{ request()->is('admin/website-settings*')  ? 'active open' : '' }}">
+        <li class="menu-item {{ request()->is('admin/website-settings*') || request()->is('admin/sliders*') || request()->is('admin/pages*')  ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-cog"></i>
                 <div class="text-truncate" data-i18n="Dashboards">Settings</div>
             </a>
             <ul class="menu-sub">
+
+                <li class="menu-item {{ request()->is('admin/sliders*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.sliders.index') }}" class="menu-link">
+                        <div class="text-truncate">Slider</div>
+                    </a>
+                </li>
+
+                <li class="menu-item {{ request()->is('admin/promotional-categories*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.promotional-categories.index') }}" class="menu-link">
+                        <div class="text-truncate">Promotional Category</div>
+                    </a>
+                </li>
+
+                <li class="menu-item {{ request()->is('admin/pages*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.pages.index') }}" class="menu-link">
+                        <div class="text-truncate">Dynamic Page</div>
+                    </a>
+                </li>
+
                 <li class="menu-item {{ request()->is('admin/website-settings*') ? 'active' : '' }}">
                     <a href="{{ route('admin.website_settings') }}" class="menu-link">
                         <div class="text-truncate" data-i18n="Analytics">Website Setting</div>

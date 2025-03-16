@@ -47,10 +47,11 @@
                                     @csrf
                                 </form>
                             </p>
-
+                            <p><b class="text-dark">Current Balance</b>: {{ auth()->user()->balance }} {{ base_currency_name() }}</p>
+                            <p><b class="text-dark">Current Refer Earning </b>: {{ auth()->user()->refer_balance }} {{ base_currency_name() }}</p>
                             <p class="mb-4">
-                                From your account dashboard you can view your <a href=""
-                                                                                 class="text-primary link-to-tab">recent orders</a>,
+                                From your account dashboard you can view your
+                                <a href="" class="text-primary link-to-tab">recent orders</a>,
                                 manage your <a href="" class="text-primary link-to-tab">shipping
                                     and billing
                                     addresses</a>, and
@@ -60,8 +61,22 @@
                             </p>
 
                             <div class="row">
+
                                 <div class="col-lg-4 col-md-6 col-sm-4 col-xs-6 mb-4">
-                                    <a href="#account-orders" class="link-to-tab">
+                                    <a href="{{ route('user.deposit_list') }}" class="link-to-tab">
+                                        <div class="icon-box text-center">
+                                                <span class="icon-box-icon icon-orders">
+                                                    <i class="w-icon-money"></i>
+                                                </span>
+                                            <div class="icon-box-content">
+                                                <p class="text-uppercase mb-0">Deposits</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="col-lg-4 col-md-6 col-sm-4 col-xs-6 mb-4">
+                                    <a href="{{ route('user.order_list') }}" class="link-to-tab">
                                         <div class="icon-box text-center">
                                                 <span class="icon-box-icon icon-orders">
                                                     <i class="w-icon-orders"></i>
@@ -74,22 +89,49 @@
                                 </div>
 
                                 <div class="col-lg-4 col-md-6 col-sm-4 col-xs-6 mb-4">
-                                    <a href="#account-addresses" class="link-to-tab">
+                                    <a href="{{ route('user.my_refer') }}" class="link-to-tab">
                                         <div class="icon-box text-center">
                                                 <span class="icon-box-icon icon-address">
-                                                    <i class="w-icon-map-marker"></i>
+                                                    <i class="w-icon-user"></i>
                                                 </span>
                                             <div class="icon-box-content">
-                                                <p class="text-uppercase mb-0">Addresses</p>
+                                                <p class="text-uppercase mb-0">My Refers</p>
                                             </div>
                                         </div>
                                     </a>
                                 </div>
+
                                 <div class="col-lg-4 col-md-6 col-sm-4 col-xs-6 mb-4">
-                                    <a href="#account-details" class="link-to-tab">
+                                    <a href="{{ route('user.withdraw_list') }}" class="link-to-tab">
+                                        <div class="icon-box text-center">
+                                                <span class="icon-box-icon icon-address">
+                                                    <i class="w-icon-money"></i>
+                                                </span>
+                                            <div class="icon-box-content">
+                                                <p class="text-uppercase mb-0">Withdraw</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="col-lg-4 col-md-6 col-sm-4 col-xs-6 mb-4">
+                                    <a href="{{ route('user.transactions') }}" class="link-to-tab">
+                                        <div class="icon-box text-center">
+                                                <span class="icon-box-icon icon-address">
+                                                    <i class="w-icon-table2"></i>
+                                                </span>
+                                            <div class="icon-box-content">
+                                                <p class="text-uppercase mb-0">Transactions</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="col-lg-4 col-md-6 col-sm-4 col-xs-6 mb-4">
+                                    <a href="{{ route('user.account_details') }}" class="link-to-tab">
                                         <div class="icon-box text-center">
                                                 <span class="icon-box-icon icon-account">
-                                                    <i class="w-icon-user"></i>
+                                                    <i class="w-icon-account"></i>
                                                 </span>
                                             <div class="icon-box-content">
                                                 <p class="text-uppercase mb-0">Account Details</p>
@@ -97,19 +139,7 @@
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-4 col-xs-6 mb-4">
-                                    <a href="wishlist.html" class="link-to-tab">
-                                        <div class="icon-box text-center">
-                                                <span class="icon-box-icon icon-wishlist">
-                                                    <i class="w-icon-heart"></i>
-                                                </span>
-                                            <div class="icon-box-content">
-                                                <p class="text-uppercase mb-0">Wishlist</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-4 col-xs-6 mb-4">
+                                {{--<div class="col-lg-4 col-md-6 col-sm-4 col-xs-6 mb-4">
                                     <a href="logout" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                         <div class="icon-box text-center">
                                                 <span class="icon-box-icon icon-logout">
@@ -120,7 +150,7 @@
                                             </div>
                                         </div>
                                     </a>
-                                </div>
+                                </div>--}}
                             </div>
                         </div>
 

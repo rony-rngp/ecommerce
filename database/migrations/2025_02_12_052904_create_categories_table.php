@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('icon');
             $table->string('image');
             $table->string('status')->default(1);
+            $table->tinyInteger('show_home_page')->default(0);
             $table->timestamps();
         });
     }

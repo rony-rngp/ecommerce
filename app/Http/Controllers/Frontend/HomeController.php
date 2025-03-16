@@ -3,14 +3,23 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\Coupon;
+use App\Models\DynamicPage;
+use App\Models\Order;
+use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\ProductAttribute;
+use App\Models\PromotionalCategory;
 use App\Models\Slider;
+use App\Models\Subcategory;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,17 +28,79 @@ class HomeController extends Controller
     public function index()
     {
         $data['sliders'] = Slider::get();
-        $data['new_arrivals'] = Product::where('status', 1)->latest()->take(10)->get();
+        $data['hot_deals'] = Product::with('attributes', 'product_colors', 'product_galleries','rating')->where('status', 1)
+            ->where('hot_deals', 1)->orderBy('updated_at', 'desc')->take(10)->get();
+        $data['new_arrivals'] = Product::with('rating')->where('status', 1)->latest()->take(10)->get();
+        $data['best_sells'] = Product::with('rating')->where('status', 1)
+            ->whereHas('order_products.order', function($q) {
+                $q->where('status', 'delivered'); // Filter orders with 'delivered' status
+            })
+            ->withCount(['order_products as delivered_count' => function($q) {
+                $q->whereHas('order', function($q) {
+                    $q->where('status', 'delivered'); // Ensure that the related order is delivered
+                });
+            }]) // Count the number of delivered orders for each product
+            ->orderByDesc('delivered_count') // Order by most delivered products
+            ->take(10)->get();
+
+
+        $data['featured_products'] = Product::with('rating')->where('status', 1)
+            ->where('is_featured', 1)->orderBy('updated_at', 'desc')->take(10)->get();
+
+        $data['home_categories'] = Category::with([
+            'active_products' => function ($query) {
+                $query->latest()->limit(10)->with('rating');
+            }
+        ])->where(['status' => 1, 'show_home_page' => 1])->get();
+
+        $data['promotional_categories'] = PromotionalCategory::with('category:id,name,slug')->get();
+
+        $brands = Brand::where('status', 1)->get();
+        $data['brand_chunk'] = $brands->chunk(1);
+
+        $data['coupon'] = Coupon::active()->first();
+
         return view('frontend.home', $data);
     }
 
     public function product_details($slug)
     {
-        $product = Product::with('category', 'subcategory', 'brand', 'attributes', 'product_colors', 'product_galleries')
+        $product = Product::with('category', 'subcategory', 'brand', 'attributes', 'product_colors', 'product_galleries', 'reviews.user', 'rating')
             ->where('slug', $slug)
             ->where('status', 1)
             ->firstOrFail();
-        return view('frontend.product.product_details', compact('product'));
+
+        $more_products = Product::with('rating')->where(['status' => 1])->where('id', '!=', $product->id)
+            ->inRandomOrder()->take(6)->get();
+        $chunked_more_products = $more_products->chunk(3);
+
+        $check = DB::table('order_products')->select('orders.id as order_id', 'orders.user_id as user_id')
+            ->join('orders', 'orders.id', 'order_products.order_id')
+            ->leftJoin('product_reviews', function ($join) {
+                $join->on('order_products.order_id', '=', 'product_reviews.order_id')
+                    ->on('order_products.product_id', '=', 'product_reviews.product_id');
+            })
+            ->leftJoin('products', 'products.id', 'order_products.product_id')
+            ->whereNull('product_reviews.id')
+            ->where('orders.user_id', @Auth::user()->id)
+            ->where('orders.status', 'Delivered')
+            ->where('products.id', $product->id)
+            ->orderBy('order_products.id', 'desc')
+            ->get();
+
+        if (!empty($check) && count($check) > 0){
+            $review_info = array(
+                'order_info' => $check,
+                'is_review' => true,
+            );
+        }else{
+            $review_info = array(
+                'order_info' => [],
+                'is_review' => false,
+            );
+        }
+
+        return view('frontend.product.product_details', compact('product','chunked_more_products', 'review_info'));
     }
 
     public function add_to_card(Request $request, $id)
@@ -110,7 +181,7 @@ class HomeController extends Controller
         Session::put('cart', $cart);
 
         notify()->success('Product has been added in cart');
-        return redirect()->back();
+        return redirect()->route('view_cart');
     }
 
     public function view_cart()
@@ -196,6 +267,10 @@ class HomeController extends Controller
     {
         Session::forget('coupon_code');
         Session::forget('coupon_discount');
+
+        if (!Auth::check()){
+            return response()->json(['status' => false, 'message' => 'For apply coupon. Please login your account']);
+        }
 
         $code = $request->coupon;
         if ($code == ''){
@@ -285,6 +360,48 @@ class HomeController extends Controller
         Session::forget('coupon_discount');
         notify()->success('Coupon removed successfully');
         return redirect()->back();
+    }
+
+    public function category_product(Request $request)
+    {
+        $request->flash();
+        $category_slug = $request->category;
+        $subcategory_slug = $request->subcategory;
+        $category = Category::with('active_subcategories')->where('status', 1)->where('slug', $category_slug)->first();
+        $subcategory = Subcategory::where('status', 1)->where('slug', $subcategory_slug)->first();
+        $products = Product::with('category', 'rating');
+        if ($category != null){
+            $products = $products->where('category_id', $category->id);
+        }
+        if ($subcategory != null){
+            $products = $products->where('subcategory_id', $subcategory->id);
+        }
+        if ($request->search){
+            $products = $products->where('name', 'LIKE', "%$request->search%");
+        }
+        if ($request->sort){
+            if ($request->sort == 'price-low'){
+                $products = $products->orderBy('price', 'asc');
+            }else{
+                $products = $products->orderBy('price', 'desc');
+            }
+        }else{
+            $products = $products->orderBy('id', 'desc');
+        }
+        $count = $request->count ?? 12;
+        $products = $products->where('status', 1)->paginate($count);
+
+        $data['category'] = $category;
+        $data['subcategory'] = $subcategory;
+        $data['products'] = $products;
+
+        return view('frontend.category.category_product', $data);
+    }
+
+    public function dynamic_page($slug)
+    {
+        $page = DynamicPage::where('status', 1)->where('slug', $slug)->first();
+        return view('frontend.dynamic_page', compact('page'));
     }
 
 }

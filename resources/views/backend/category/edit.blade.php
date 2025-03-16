@@ -49,7 +49,7 @@
                                 </div>
 
                                 <div class="mb-4 col-md-6">
-                                    <label class="form-label" for="image">Image <i class="text-danger">*</i></label>
+                                    <label class="form-label" for="image">Image (Width:190px Height:184)</label>
                                     <input type="file" class="form-control" accept="image/*" name="image" id="image" >
                                     <span class="text-danger">{{ $errors->has('image') ? $errors->first('image') : '' }}</span>
                                     @if($category->image != '' && Storage::disk('public')->exists($category->image))

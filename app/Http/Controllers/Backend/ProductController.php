@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\ProductAttribute;
 use App\Models\ProductColor;
 use App\Models\ProductGallery;
+use App\Models\ProductReview;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -232,8 +233,8 @@ class ProductController extends Controller
                     $product->attributes()->whereNotIn('id', collect($data)->pluck('id'))->delete();
                 }
 
+                ProductColor::where('product_id', $product->id)->delete();
                 if ($request->color_id != null){
-                    ProductColor::where('product_id', $product->id)->delete();
                     foreach ($request->color_id ?? [] as $color_id){
                         $color = Color::find($color_id);
                         if ($color){
@@ -253,6 +254,22 @@ class ProductController extends Controller
             $request->flash();
             return redirect()->back()->with('error', $exception->getMessage());
         }
+    }
+
+    public function is_featured(Request $request)
+    {
+        $product = Product::find($request->product_id);
+        $product->is_featured = $request->is_featured;
+        $product->update();
+        return response()->json('Success');
+    }
+
+    public function hot_deals(Request $request)
+    {
+        $product = Product::find($request->product_id);
+        $product->hot_deals = $request->hot_deals;
+        $product->update();
+        return response()->json('Success');
     }
 
     public function product_gallery(Request $request, $id)
@@ -301,4 +318,35 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->back()->with('success', 'Product deleted successfully');
     }
+
+    public function reviews()
+    {
+        $reviews = ProductReview::with('user', 'product')->latest()->paginate(pagination_limit());
+        return view('backend.reviews.index', compact('reviews'));
+    }
+
+    public function review_details($id)
+    {
+        $review = ProductReview::with('user', 'product')->find($id);
+        return view('backend.reviews.review_details', compact('review'));
+    }
+
+    public function review_status(Request $request, $id)
+    {
+        $request->validate([
+           'status' => 'required|in:0,1',
+        ]);
+        $review = ProductReview::find($id);
+        $review->status = $request->status;
+        $review->update();
+        return redirect()->back()->with('success', 'Status updated successfully');
+    }
+
+    public function review_destroy( $id)
+    {
+        $review = ProductReview::find($id);
+        $review->delete();
+        return redirect()->back()->with('success', 'Review deleted successfully');
+    }
+
 }

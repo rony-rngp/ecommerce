@@ -13,6 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+           'active_user' => \App\Http\Middleware\ActiveUser::class,
+        ]);
+        $middleware->validateCsrfTokens(except: [
+            '/deposit/ssl_commerz/*',
+            '/payment/ssl_commerz/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

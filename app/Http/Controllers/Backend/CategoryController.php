@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(pagination_limit());
+        $categories = Category::withCount('products')->paginate(pagination_limit());
         return view('backend.category.index', compact('categories'));
     }
 
@@ -112,5 +112,13 @@ class CategoryController extends Controller
 
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully!');
 
+    }
+
+    public function show_home_page(Request $request)
+    {
+        $category = Category::find($request->category_id);
+        $category->show_home_page = $request->show_home_page;
+        $category->update();
+        return response()->json('success');
     }
 }

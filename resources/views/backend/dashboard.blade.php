@@ -45,12 +45,12 @@
                                             <i class="bx bx-dots-vertical-rounded text-muted"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                            <a class="dropdown-item" href="">View More</a>
+                                            <a class="dropdown-item" href="{{ route('admin.orders.index') }}">View More</a>
                                         </div>
                                     </div>
                                 </div>
                                 <p class="mb-1">Total Orders</p>
-                                <h4 class="card-title">1</h4>
+                                <h4 class="card-title">{{ \App\Models\Order::count() }}</h4>
                             </div>
                         </div>
                     </div>
@@ -66,12 +66,12 @@
                                             <i class="bx bx-dots-vertical-rounded text-muted"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                            <a class="dropdown-item" href="">View More</a>
+                                            <a class="dropdown-item" href="{{ route('admin.users.index') }}">View More</a>
                                         </div>
                                     </div>
                                 </div>
                                 <p class="mb-1">Total Users</p>
-                                <h4 class="card-title">2</h4>
+                                <h4 class="card-title">{{ \App\Models\User::count() }}</h4>
                             </div>
                         </div>
                     </div>

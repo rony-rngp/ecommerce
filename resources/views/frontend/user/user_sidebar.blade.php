@@ -6,16 +6,22 @@
         <a href="{{ route('user.deposit_list') }}" class="nav-link {{ request()->is('user/deposits') ? 'active' : '' }}">Deposits</a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link">Orders</a>
+        <a href="{{ route('user.order_list') }}" class="nav-link {{ request()->is('user/orders*') ? 'active' : '' }}">Orders</a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link">Addresses</a>
+        <a href="{{ route('user.my_refer') }}" class="nav-link {{ request()->is('user/my-refer*') ? 'active' : '' }}">My Refers</a>
     </li>
     <li class="nav-item">
-        <a href="" class="nav-link">Account details</a>
+        <a href="{{ route('user.withdraw_list') }}" class="nav-link {{ request()->is('user/withdraws') ? 'active' : '' }}">Withdraw</a>
     </li>
-    <li class="link-item">
-        <a href="">Wishlist</a>
+    <li class="nav-item">
+        <a href="{{ route('user.transactions') }}" class="nav-link {{ request()->is('user/transactions*') ? 'active' : '' }}">Transactions</a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('user.my_reviews') }}" class="nav-link {{ request()->is('user/my-reviews*') ? 'active' : '' }}">My Reviews</a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('user.account_details') }}" class="nav-link {{ request()->is('user/account-details*') ? 'active' : '' }}">Account details</a>
     </li>
     <li class="link-item">
         <a href="{{ route('user.dashboard') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Logout</a>

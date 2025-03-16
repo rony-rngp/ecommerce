@@ -27,7 +27,8 @@ return new class extends Migration
             $table->tinyInteger('has_attribute')->default(1);
             $table->string('attribute_title')->nullable();
             $table->integer('stock')->default(0);
-            $table->integer('is_featured')->default(0);
+            $table->tinyInteger('is_featured')->default(0);
+            $table->tinyInteger('hot_deals')->default(0);
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
