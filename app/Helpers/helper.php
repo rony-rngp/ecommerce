@@ -118,3 +118,12 @@ function placeOrderLog($order){
 function getAvg($rating){
     return ($rating/5)*100;
 }
+
+function generateUniqueCode()
+{
+    do {
+        $code = rand(000000, 999999);
+    } while (\App\Models\User::where('otp', $code)->exists());
+
+    return $code;
+}

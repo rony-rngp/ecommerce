@@ -44,6 +44,9 @@ Route::controller(\App\Http\Controllers\Frontend\AuthController::class)->group(f
     Route::match(['get', 'post'], 'login', 'login')->name('login');
     Route::match(['get', 'post'], 'register', 'register')->name('register');
     Route::post('/logout', 'logout')->name('user.logout')->middleware('auth');
+
+    Route::match(['get', 'post'], 'forgot-password', 'forgot_password')->name('forgot_password');
+    Route::match(['get', 'post'], 'reset-password/{opt}', 'reset_password')->name('reset_password');
 });
 
 //wishlist

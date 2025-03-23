@@ -30,7 +30,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $data['sliders'] = Slider::get();
+        $data['sliders'] = Slider::with('product', 'category')->get();
         $data['hot_deals'] = Product::with('attributes', 'product_colors', 'product_galleries','rating')->where('status', 1)
             ->where('hot_deals', 1)->orderBy('updated_at', 'desc')->take(10)->get();
         $data['new_arrivals'] = Product::with('rating', 'check_wish')->where('status', 1)->latest()->take(10)->get();

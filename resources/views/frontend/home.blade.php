@@ -78,7 +78,11 @@
                                     {{ $slider->third_title }}
                                 </p>
 
-                                <a @if($slider->type == 'product') href="/product/{{ $slider->product_id }}" @else  href="/category/{{ $slider->category_id }}" @endif
+                                <a @if($slider->type == 'product')
+                                       href="{{ route('product_details', @$slider->product->slug) }}"
+                                   @else
+                                       href="{{ route('category_product', ['category' => @$slider->category->slug]) }}"
+                                   @endif
                                    class="btn btn-dark btn-outline btn-rounded btn-icon-right slide-animate"
                                    data-animation-options="{
                                         'name': 'fadeInRightShorter',

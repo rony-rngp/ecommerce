@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ForgotPassword;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -77,6 +80,63 @@ class AuthController extends Controller
     {
         Auth::logout();
         return redirect()->route('login');
+    }
+
+    public function forgot_password(Request $request)
+    {
+        if ($request->isMethod('post')){
+            $request->validate([
+                'email' => 'required|email'
+            ]);
+
+            $email = $request->email;
+
+            $user = User::where('email', $email)->first();
+            if ($user == null){
+                throw ValidationException::withMessages(['email' => 'Sorry, we couldn\'t find an account with that email address. Please check the email and try again.']);
+            }
+
+            $user->otp = generateUniqueCode();
+            $user->update();
+
+            Mail::to($user->email)->send(new ForgotPassword($user));
+
+            $msg = 'Password reset email has been sent! Please check your inbox and follow the instructions to reset your password.';
+            return redirect()->back()->with('success', $msg);
+
+        }
+        return view('frontend.auth.forgot_password');
+    }
+
+    public function reset_password($otp, Request $request)
+    {
+        $otp = Crypt::decrypt($otp);
+        if ($otp == ''){
+            return redirect('/');
+        }
+
+        $user = User::where('otp', $otp)->first();
+        if ($user == null){
+            abort(404);
+        }
+
+        if ($request->isMethod('post')){
+
+            $request->validate([
+                'password' => 'required|string|min:8|confirmed', // 'confirmed' will look for 'new_password_confirmation'
+            ]);
+
+            $user->password = Hash::make($request->password);
+            $user->otp = null;
+            $user->update();
+
+            notify()->success('Password reset successfully');
+            return redirect()->route('login');
+
+        }
+
+        return view('frontend.auth.reset_password', compact('otp', 'user'));
+
     }
 
 }

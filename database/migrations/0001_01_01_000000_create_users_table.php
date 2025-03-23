@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('refer_code')->nullable();
             $table->integer('refer_by')->nullable();
             $table->tinyInteger('status')->default(1);
+            $table->string('otp')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

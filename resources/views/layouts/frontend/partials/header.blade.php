@@ -286,7 +286,7 @@
                                 </li>
 
                                 <li class="{{ request()->is('register') ? 'active' : '' }}">
-                                    <a href="{{ route('register') }}?refer_code=UPN4YES0">Register</a>
+                                    <a href="{{ route('register') }}">Register</a>
                                 </li>
                             @else
                                 <li class="{{ request()->is('user/dashboard') ? 'active' : '' }}">

@@ -57,7 +57,7 @@
                                     <div class="form-checkbox d-flex align-items-center justify-content-between">
                                         <input type="checkbox" class="custom-checkbox" id="remember" name="remember" >
                                         <label for="remember">Remember me</label>
-                                        <a href="#">Lost your password?</a>
+                                        <a href="{{ route('forgot_password') }}">Lost your password?</a>
                                     </div>
                                     <button type="submit" class="btn btn-primary w-100">Sign In</button>
 
