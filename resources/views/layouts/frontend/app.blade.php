@@ -8,7 +8,7 @@
     <title>@yield('title') - {{ get_settings('website_name') }}</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('frontend') }}/assets/images/icons/favicon.png">
+    <link rel="icon" type="image/png" href="{{ asset('storage/'.get_settings('favicon')) }}">
 
 
     <meta name="author" content="{{ get_settings('website_name') }}">
@@ -78,6 +78,17 @@
     @stack('css')
 
     <script src="{{ asset('frontend') }}/assets/vendor/jquery/jquery.min.js"></script>
+
+    <style>
+        #youtebePop iframe{
+            margin-bottom: -10px !important;
+        }
+        @media (max-width: 576px) {
+            #youtebePop iframe{
+                height: 300px;
+            }
+        }
+    </style>
 
 </head>
 
@@ -151,177 +162,19 @@
 <!-- End of Newsletter popup -->
 
 <!-- Start of Quick View -->
-<div class="product product-single product-popup">
-    <div class="row gutter-lg">
-        <div class="col-md-6 mb-4 mb-md-0">
-            <div class="product-gallery product-gallery-sticky">
-                <div class="swiper-container product-single-swiper swiper-theme nav-inner">
-                    <div class="swiper-wrapper row cols-1 gutter-no">
-                        <div class="swiper-slide">
-                            <figure class="product-image">
-                                <img src="{{ asset('frontend') }}/assets/images/products/popup/1-440x494.jpg"
-                                     data-zoom-image="{{ asset('frontend') }}/assets/images/products/popup/1-800x900.jpg"
-                                     alt="Water Boil Black Utensil" width="800" height="900">
-                            </figure>
-                        </div>
-                        <div class="swiper-slide">
-                            <figure class="product-image">
-                                <img src="{{ asset('frontend') }}/assets/images/products/popup/2-440x494.jpg"
-                                     data-zoom-image="{{ asset('frontend') }}/assets/images/products/popup/2-800x900.jpg"
-                                     alt="Water Boil Black Utensil" width="800" height="900">
-                            </figure>
-                        </div>
-                        <div class="swiper-slide">
-                            <figure class="product-image">
-                                <img src="{{ asset('frontend') }}/assets/images/products/popup/3-440x494.jpg"
-                                     data-zoom-image="{{ asset('frontend') }}/assets/images/products/popup/3-800x900.jpg"
-                                     alt="Water Boil Black Utensil" width="800" height="900">
-                            </figure>
-                        </div>
-                        <div class="swiper-slide">
-                            <figure class="product-image">
-                                <img src="{{ asset('frontend') }}/assets/images/products/popup/4-440x494.jpg"
-                                     data-zoom-image="{{ asset('frontend') }}/assets/images/products/popup/4-800x900.jpg"
-                                     alt="Water Boil Black Utensil" width="800" height="900">
-                            </figure>
-                        </div>
-                    </div>
-                    <button class="swiper-button-next"></button>
-                    <button class="swiper-button-prev"></button>
-                </div>
-                <div class="product-thumbs-wrap swiper-container" data-swiper-options="{
-                        'navigation': {
-                            'nextEl': '.swiper-button-next',
-                            'prevEl': '.swiper-button-prev'
-                        }
-                    }">
-                    <div class="product-thumbs swiper-wrapper row cols-4 gutter-sm">
-                        <div class="product-thumb swiper-slide">
-                            <img src="{{ asset('frontend') }}/assets/images/products/popup/1-103x116.jpg" alt="Product Thumb" width="103"
-                                 height="116">
-                        </div>
-                        <div class="product-thumb swiper-slide">
-                            <img src="{{ asset('frontend') }}/assets/images/products/popup/2-103x116.jpg" alt="Product Thumb" width="103"
-                                 height="116">
-                        </div>
-                        <div class="product-thumb swiper-slide">
-                            <img src="{{ asset('frontend') }}/assets/images/products/popup/3-103x116.jpg" alt="Product Thumb" width="103"
-                                 height="116">
-                        </div>
-                        <div class="product-thumb swiper-slide">
-                            <img src="{{ asset('frontend') }}/assets/images/products/popup/4-103x116.jpg" alt="Product Thumb" width="103"
-                                 height="116">
-                        </div>
-                    </div>
-                    <button class="swiper-button-next"></button>
-                    <button class="swiper-button-prev"></button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 overflow-hidden p-relative">
-            <div class="product-details scrollable pl-0">
-                <h2 class="product-title">Electronics Black Wrist Watch</h2>
-                <div class="product-bm-wrapper">
-                    <figure class="brand">
-                        <img src="{{ asset('frontend') }}/assets/images/products/brand/brand-1.jpg" alt="Brand" width="102" height="48" />
-                    </figure>
-                    <div class="product-meta">
-                        <div class="product-categories">
-                            Category:
-                            <span class="product-category"><a href="#">Electronics</a></span>
-                        </div>
-                        <div class="product-sku">
-                            SKU: <span>MS46891340</span>
-                        </div>
-                    </div>
-                </div>
+<div id="quickViewProduct" class="product product-single product-popup">
 
-                <hr class="product-divider">
+</div>
+<!-- End of Quick view -->
 
-                <div class="product-price">$40.00</div>
+<!-- Start of Quick View -->
+<div class="mfp-hide" id="youtebePop" style="padding: 0px 0px; max-width: 700px; border-radius: 10px">
 
-                <div class="ratings-container">
-                    <div class="ratings-full">
-                        <span class="ratings" style="width: 80%;"></span>
-                        <span class="tooltiptext tooltip-top"></span>
-                    </div>
-                    <a href="#" class="rating-reviews">(3 Reviews)</a>
-                </div>
-
-                <div class="product-short-desc">
-                    <ul class="list-type-check list-style-none">
-                        <li>Ultrices eros in cursus turpis massa cursus mattis.</li>
-                        <li>Volutpat ac tincidunt vitae semper quis lectus.</li>
-                        <li>Aliquam id diam maecenas ultricies mi eget mauris.</li>
-                    </ul>
-                </div>
-
-                <hr class="product-divider">
-
-                <div class="product-form product-variation-form product-color-swatch">
-                    <label>Color:</label>
-                    <div class="d-flex align-items-center product-variations">
-                        <a href="#" class="color" style="background-color: #ffcc01"></a>
-                        <a href="#" class="color" style="background-color: #ca6d00;"></a>
-                        <a href="#" class="color" style="background-color: #1c93cb;"></a>
-                        <a href="#" class="color" style="background-color: #ccc;"></a>
-                        <a href="#" class="color" style="background-color: #333;"></a>
-                    </div>
-                </div>
-                <div class="product-form product-variation-form product-size-swatch">
-                    <label class="mb-1">Size:</label>
-                    <div class="flex-wrap d-flex align-items-center product-variations">
-                        <a href="#" class="size">Small</a>
-                        <a href="#" class="size">Medium</a>
-                        <a href="#" class="size">Large</a>
-                        <a href="#" class="size">Extra Large</a>
-                    </div>
-                    <a href="#" class="product-variation-clean">Clean All</a>
-                </div>
-
-                <div class="product-variation-price">
-                    <span></span>
-                </div>
-
-                <div class="product-form">
-                    <div class="product-qty-form">
-                        <div class="input-group">
-                            <input class="quantity form-control" type="number" min="1" max="10000000">
-                            <button class="quantity-plus w-icon-plus"></button>
-                            <button class="quantity-minus w-icon-minus"></button>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary btn-cart">
-                        <i class="w-icon-cart"></i>
-                        <span>Add to Cart</span>
-                    </button>
-                </div>
-
-                <div class="social-links-wrapper">
-                    <div class="social-links">
-                        <div class="social-icons social-no-color border-thin">
-                            <a href="#" class="social-icon social-facebook w-icon-facebook"></a>
-                            <a href="#" class="social-icon social-twitter w-icon-twitter"></a>
-                            <a href="#" class="social-icon social-pinterest fab fa-pinterest-p"></a>
-                            <a href="#" class="social-icon social-whatsapp fab fa-whatsapp"></a>
-                            <a href="#" class="social-icon social-youtube fab fa-linkedin-in"></a>
-                        </div>
-                    </div>
-                    <span class="divider d-xs-show"></span>
-                    <div class="product-link-wrapper d-flex">
-                        <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"><span></span></a>
-                        <a href="#"
-                           class="btn-product-icon btn-compare btn-icon-left w-icon-compare"><span></span></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 <!-- End of Quick view -->
 
 
-<div class="mfp-hide" id="main_modal" tabindex="-1" style="padding: 30px 30px; max-width: 700px; border-radius: 10px">
+<div class="mfp-hide" id="main_modal" tabindex="-1" style="padding: 30px 30px; max-width: 600px; border-radius: 10px">
     <div class="">
         <h4 class="modal-title">Title</h4>
         <hr>
@@ -373,7 +226,63 @@
                 }
             });
             return false;
-        })
+        });
+
+        $(".quick_view").on('click', function () {
+            var link = $(this).attr("href");
+            var title = $(this).data("title");
+
+            $.ajax({
+                url: link,
+                success: function(data){
+
+                    $("#quickViewProduct").html(data);
+
+                    Wolmart.popup(
+                        {
+                            items: { src: $("#quickViewProduct")[0].outerHTML },
+                            callbacks: {
+                                open: function () {
+                                    Wolmart.productSingle($(".mfp-product .product-single"));
+                                },
+                                close: function () {
+                                    $(".mfp-product .swiper-container").each(function () {
+                                        if (this.swiper) {
+                                            this.swiper.destroy(true, true);
+                                        }
+                                    });
+                                }
+                            }
+                        },
+                        "quickview"
+                    );
+
+                }
+            });
+            return false;
+        });
+
+        $(".playVideo").on('click', function () {
+            var link = $(this).attr("href");
+
+            var videoId = link.split('v=')[1].split('&')[0];
+
+            var fram = '<iframe id="youtube-video" src="https://www.youtube.com/embed/'+videoId+'?rel=0" width="100%" height="400" style="margin-bottom:-9px;" frameborder="0" \n' +
+                ' allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" \n' +
+                ' allowfullscreen>\n' +
+                '</iframe>';
+
+            $("#youtebePop").html(fram);
+
+            Wolmart.popup({
+                items: { src: "#youtebePop" },
+                type: "inline",
+                tLoading: "",
+            });
+
+            return false;
+        });
+
     });
 </script>
 
@@ -387,6 +296,43 @@
                 message: 'Daily Deals section not found. Please check back later for exciting offers!',
             });
         }
+    }
+
+
+    function addWishlist(productID) {
+        $.ajax({
+            url : "{{ route('wishlist.store') }}",
+            type : "get",
+            data : {product_id:productID},
+            success:function (res) {
+                if(res.status == true){
+                    if(res['type'] == 'add'){
+                        $(".wish_"+productID).removeClass('w-icon-heart');
+                        $(".wish_"+productID).addClass('w-icon-heart-full');
+                        iziToast.success({
+                            title: 'Success',
+                            message: 'Added in wishlist',
+                            position: "topRight",
+                        });
+                    }else{
+                        $(".wish_"+productID).removeClass('w-icon-heart-full');
+                        $(".wish_"+productID).addClass('w-icon-heart');
+                        iziToast.success({
+                            title: 'Success',
+                            message: 'Removed from wishlist',
+                            position: "topRight",
+                        });
+                    }
+                }else{
+                    iziToast.error({
+                        title: 'Error',
+                        message: res.message,
+                        position: "topRight",
+                    });
+                }
+            }
+        });
+
     }
 </script>
 

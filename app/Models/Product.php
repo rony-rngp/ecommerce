@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Product extends Model
@@ -76,6 +77,11 @@ class Product extends Model
     public function order_products()
     {
         return $this->hasMany(OrderProduct::class);
+    }
+
+    public function check_wish()
+    {
+        return $this->belongsTo(Wishlist::class, 'id', 'product_id')->where('user_id', Auth::id());
     }
 
 }

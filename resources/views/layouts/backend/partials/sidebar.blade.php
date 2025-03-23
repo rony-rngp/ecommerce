@@ -218,8 +218,22 @@
             </a>
         </li>
 
+        <li class="menu-item {{ request()->is('admin/contacts*') ? 'active' : '' }}">
+            <a href="{{ route('admin.contact_us') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-contact"></i>
+                <div class="text-truncate">Contact</div>
+                <div class="badge rounded-pill bg-label-danger text-uppercase fs-tiny ms-auto">{{ \App\Models\Contact::where('is_seen', 0)->count() }}</div>
+            </a>
+        </li>
 
-        <li class="menu-item {{ request()->is('admin/website-settings*') || request()->is('admin/sliders*') || request()->is('admin/pages*')  ? 'active open' : '' }}">
+        <li class="menu-item {{ request()->is('admin/subscribers*') ? 'active' : '' }}">
+            <a href="{{ route('admin.subscribers') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-mail-send"></i>
+                <div class="text-truncate">Subscribers</div>
+            </a>
+        </li>
+
+        <li class="menu-item {{ request()->is('admin/website-settings*') || request()->is('admin/sliders*') || request()->is('admin/pages*') || request()->is('admin/promotional-categories*') || request()->is('admin/videos*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-cog"></i>
                 <div class="text-truncate" data-i18n="Dashboards">Settings</div>
@@ -235,6 +249,12 @@
                 <li class="menu-item {{ request()->is('admin/promotional-categories*') ? 'active' : '' }}">
                     <a href="{{ route('admin.promotional-categories.index') }}" class="menu-link">
                         <div class="text-truncate">Promotional Category</div>
+                    </a>
+                </li>
+
+                <li class="menu-item {{ request()->is('admin/videos*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.videos.index') }}" class="menu-link">
+                        <div class="text-truncate">Videos</div>
                     </a>
                 </li>
 

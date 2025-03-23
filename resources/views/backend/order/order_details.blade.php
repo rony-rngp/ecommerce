@@ -194,7 +194,7 @@
                                     <option {{ $order->status == 'Processing' ? 'selected' : '' }} value="Processing">Processing</option>
                                     <option {{ $order->status == 'Out for delivery' ? 'selected' : '' }} value="Out for delivery">Out for delivery</option>
                                     <option {{ $order->status == 'Delivered' ? 'selected' : '' }} value="Delivered">Delivered</option>
-                                    <option {{ $order->status == 'Returned' ? 'selected' : '' }} value="Returned">Returned</option>
+                                    {{--<option {{ $order->status == 'Returned' ? 'selected' : '' }} value="Returned">Returned</option>--}}
                                     <option {{ $order->status == 'Failed' ? 'selected' : '' }} value="Failed">Failed</option>
                                     <option {{ $order->status == 'Cancelled' ? 'selected' : '' }} value="Cancelled">Cancelled</option>
                                 </select>

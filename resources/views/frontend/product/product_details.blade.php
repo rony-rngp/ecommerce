@@ -79,13 +79,13 @@
                                                 @foreach($product->product_galleries ?? [] as $gellery)
                                                     <div class="product-thumb swiper-slide">
                                                         <img src="{{ check_image($gellery->image) ? asset('storage/'.$gellery->image) : '' }}"
-                                                             alt="Product Thumb" width="800" height="900">
+                                                             alt="Product Thumb" width="103" height="116">
                                                     </div>
                                                 @endforeach
                                             @else
                                                 <div class="product-thumb swiper-slide">
                                                     <img src="{{ check_image($product->image) ? asset('storage/'.$product->image) : '' }}"
-                                                         alt="Product Thumb" width="800" height="900">
+                                                         alt="Product Thumb" width="103" height="116">
                                                 </div>
                                             @endif
                                         </div>
@@ -214,8 +214,8 @@
                                         </div>
                                         <span class="divider d-xs-show"></span>
                                         <div class="product-link-wrapper d-flex">
-                                            <a href="#"
-                                               class="btn-product-icon btn-wishlist w-icon-heart"><span></span></a>
+                                            <a href="javascript:void(0)" onclick="addWishlist('{{ $product->id }}')" class="btn-product-icon {{ $product->check_wish ? 'w-icon-heart-full' : 'w-icon-heart' }}  wish_{{ $product->id }}"
+                                               title="Add to wishlist"></a>
 
                                         </div>
                                     </div>
@@ -401,7 +401,14 @@
                                                                     <span class="tooltiptext tooltip-top"></span>
                                                                 </div>
                                                             </div>
-                                                            <div class="product-price">{{ base_currency().$more_product->price }}</div>
+                                                            <div class="product-price">
+                                                                @if($more_product->discount > 0)
+                                                                    {{ base_currency(). round($more_product->price - (($more_product->discount/100)*$more_product->price )) }}
+                                                                @else
+                                                                    {{ base_currency().$more_product->price }}
+                                                                @endif
+                                                            </div>
+
                                                         </div>
                                                     </div>
                                                     @endforeach

@@ -18,9 +18,10 @@
                     </div>
                 </div>
                 <div class="col-xl-7 col-lg-6 col-md-9 mt-4 mt-lg-0 ">
-                    <form action="#" method="get"
+                    <form action="{{ route('subscribe') }}" method="post"
                           class="input-wrapper input-wrapper-inline input-wrapper-rounded">
-                        <input type="email" class="form-control mr-2 bg-white" name="email" id="email"
+                        @csrf
+                        <input type="email" class="form-control mr-2 bg-white" name="email" id="email" required
                                placeholder="Your E-mail Address" />
                         <button class="btn btn-dark btn-rounded" type="submit">Subscribe<i
                                     class="w-icon-long-arrow-right"></i></button>
@@ -35,7 +36,7 @@
                 <div class="col-lg-4 col-sm-6">
                     <div class="widget widget-about">
                         <a href="{{ url('/') }}" class="logo-footer">
-                            <img src="{{ asset('frontend') }}/assets/images/logo_footer.png" alt="logo-footer" width="144"
+                            <img src="{{ asset('storage/'.get_settings('logo')) }}" alt="logo-footer" width="144"
                                  height="45" />
                         </a>
                         <div class="widget-body">
@@ -80,8 +81,8 @@
                         <ul class="widget-body">
                             <li><a href="{{ url('/') }}">Home</a></li>
                             <li><a href="{{ route('category_product') }}">Shop</a></li>
-                            <li><a href="">Contact</a></li>
-                            <li><a href="{{ route('user.dashboard') }}">My Account</a></li>
+                            <li><a href="{{ route('contact_us') }}">Contact</a></li>
+                            <li><a href="{{ route('videos') }}">Videos</a></li>
                         </ul>
                     </div>
                 </div>

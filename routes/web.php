@@ -2,10 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::get('/storage-link', function () {
+    \Illuminate\Support\Facades\Artisan::call('storage:link');
+    dd('Storage Linked');
+});
 
 Route::controller(\App\Http\Controllers\Frontend\HomeController::class)->group(function (){
     Route::get('/', 'index');
     Route::get('product-details/{slug}', 'product_details')->name('product_details');
+
+    Route::get('quick-view/{slug}', 'quick_view')->name('quick_view');
 
     Route::get('products', 'category_product')->name('category_product');
 
@@ -18,6 +24,12 @@ Route::controller(\App\Http\Controllers\Frontend\HomeController::class)->group(f
     Route::get('remove-coupon', 'remove_coupon')->name('remove_coupon');
 
     Route::get('/page/{slug}', 'dynamic_page')->name('dynamic_page');
+
+    Route::get('contact-us', 'contact_us')->name('contact_us');
+    Route::post('contact-store', 'contact_store')->name('contact_store');
+    Route::post('subscribe', 'subscribe')->name('subscribe');
+
+    Route::get('videos', 'videos')->name('videos');
 
 });
 
@@ -32,6 +44,15 @@ Route::controller(\App\Http\Controllers\Frontend\AuthController::class)->group(f
     Route::match(['get', 'post'], 'login', 'login')->name('login');
     Route::match(['get', 'post'], 'register', 'register')->name('register');
     Route::post('/logout', 'logout')->name('user.logout')->middleware('auth');
+});
+
+//wishlist
+Route::controller(\App\Http\Controllers\Frontend\WishlistController::class)->group(function (){
+
+    Route::get('wishlist', 'index')->name('wishlist.index')->middleware('auth');
+    Route::get('wishlist-store', 'store')->name('wishlist.store');
+    Route::get('wishlist-remove/{id}', 'remove')->name('wishlist.remove')->middleware('auth');
+
 });
 
 
@@ -107,6 +128,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function (){
         Route::match(['get', 'post'], '/', 'admin_login')->name('login');
 
         Route::get('/dashboard', 'dashboard')->name('dashboard')->middleware('admin');
+        Route::get('/dashboard/order_static', 'order_static')->name('dashboard.order_static');
+        Route::get('/dashboard/sales_static', 'sales_static')->name('dashboard.sales_static');
+
+
         Route::post('/logout', 'logout')->name('logout')->middleware('admin');
 
         Route::match(['get', 'post'], 'profile', 'profile')->name('profile');
@@ -198,6 +223,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function (){
         Route::get('reviews/details/{id}', [\App\Http\Controllers\Backend\ProductController::class, 'review_details'])->name('reviews.details');
         Route::post('reviews/status/{id}', [\App\Http\Controllers\Backend\ProductController::class, 'review_status'])->name('reviews.status');
         Route::get('reviews/destroy/{id}', [\App\Http\Controllers\Backend\ProductController::class, 'review_destroy'])->name('reviews.destroy');
+
+        //contact us
+        Route::get('contacts', [\App\Http\Controllers\Backend\SettingController::class, 'contact_us'])->name('contact_us');
+        Route::get('contacts/details/{id}', [\App\Http\Controllers\Backend\SettingController::class, 'contact_details'])->name('contact_details');
+
+        //subscribe
+        Route::get('subscribers', [\App\Http\Controllers\Backend\SettingController::class, 'subscribers'])->name('subscribers');
+        Route::get('subscribers/destroy/{id}', [\App\Http\Controllers\Backend\SettingController::class, 'subscribers_destroy'])->name('subscribers_destroy');
+
+        //videos
+        Route::resource('videos', \App\Http\Controllers\Backend\VideoController::class);
 
         //settings
         Route::match(['get', 'post'], 'website-settings', [\App\Http\Controllers\Backend\SettingController::class, 'website_settings'])->name('website_settings');

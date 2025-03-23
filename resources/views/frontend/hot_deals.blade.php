@@ -128,7 +128,7 @@
                                                 $height = 60;
                                             }
                                             ?>
-                                            <div class="product-short-desc" style="height: {{ $height }}px; text-overflow: ellipsis; overflow: hidden">
+                                            <div class="product-short-desc" style="max-height: {{ $height }}px; text-overflow: ellipsis; overflow: hidden">
                                                 {!! nl2br($product->short_description) !!}
                                             </div>
                                         @endif

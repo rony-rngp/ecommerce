@@ -1,6 +1,6 @@
 @extends('layouts.frontend.app')
 
-@section('title', 'Home')
+@section('title', 'Shop')
 
 @push('css')
 
@@ -87,10 +87,10 @@
                                              height="338" />
                                     </a>
                                     <div class="product-action-horizontal">
-                                        <a href="#" class="btn-product-icon btn-quickview w-icon-search"
+                                        <a href="{{ route('quick_view', $product->slug) }}" class="btn-product-icon quick_view w-icon-search"
                                            title="Quick View"></a>
-                                        <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"
-                                           title="Wishlist"></a>
+                                        <a href="javascript:void(0)" onclick="addWishlist('{{ $product->id }}')" class="btn-product-icon btn-wishlist {{ $product->check_wish ? 'w-icon-heart-full' : 'w-icon-heart' }}  wish_{{ $product->id }}"
+                                           title="Add to wishlist"></a>
                                         <a href="{{ route('product_details', $product->slug) }}" class="btn-product-icon btn-cart w-icon-cart"
                                            title="Add to cart"></a>
 

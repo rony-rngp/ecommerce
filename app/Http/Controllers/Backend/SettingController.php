@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contact;
 use App\Models\Setting;
+use App\Models\Subscribe;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
@@ -124,11 +126,37 @@ class SettingController extends Controller
                 ]);
             }
 
-
-
             return redirect()->back()->with('success', 'Settings updated successfully');
 
         }
         return view('backend.setting.website_setting');
     }
+
+    public function contact_us()
+    {
+        $contacts = Contact::latest()->paginate(pagination_limit());
+        return view('backend.contact.index', compact('contacts'));
+    }
+
+    public function contact_details($id)
+    {
+        $contact = Contact::find($id);
+        $contact->is_seen = 1;
+        $contact->update();
+        return view('backend.contact.contact_details', compact('contact'));
+    }
+
+    public function subscribers()
+    {
+        $subscribers = Subscribe::latest()->paginate(pagination_limit());
+        return view('backend.subscribers.index', compact('subscribers'));
+    }
+
+    public function subscribers_destroy($id)
+    {
+        $subscriber = Subscribe::find($id);
+        $subscriber->delete();
+        return redirect()->back()->with('success', 'Subscriber deleted successfully');
+    }
+
 }

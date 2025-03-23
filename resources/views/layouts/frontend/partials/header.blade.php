@@ -36,7 +36,7 @@
                 <a href="#" class="mobile-menu-toggle  w-icon-hamburger" aria-label="menu-toggle">
                 </a>
                 <a href="{{ url('/') }}" class="logo ml-lg-0">
-                    <img src="{{ asset('frontend') }}/assets/images/logo.png" alt="logo" width="144" height="45" />
+                    <img src="{{ asset('storage/'.get_settings('logo')) }}" alt="logo" width="144" height="45" />
                 </a>
                 <form method="get" action="{{ route('category_product') }}"
                       class="header-search hs-expanded hs-round d-none d-md-flex input-wrapper">
@@ -63,7 +63,7 @@
                         <a href="tel:#" class="phone-number font-weight-bolder ls-50">{{ get_settings('phone') }}</a>
                     </div>
                 </div>
-                <a class="wishlist label-down link d-xs-show" href="#">
+                <a class="wishlist label-down link d-xs-show" href="{{ route('wishlist.index') }}">
                     <i class="w-icon-heart"></i>
                     <span class="wishlist-label d-lg-show">Wishlist</span>
                 </a>
@@ -89,7 +89,7 @@
                         <span class="cart-label">Cart</span>
                     </a>
 
-                    @php($carts = Session::get('cart', []))
+                   {{-- @php($carts = Session::get('cart', []))
 
                     <?php
                     $sub_total = 0;
@@ -162,9 +162,9 @@
                                                          width="94" />
                                                 </a>
                                             </figure>
-                                            {{--<button class="btn btn-link btn-close" aria-label="button">
+                                            --}}{{--<button class="btn btn-link btn-close" aria-label="button">
                                                 <i class="fas fa-times"></i>
-                                            </button>--}}
+                                            </button>--}}{{--
                                         </div>
                                     @endif
                                     <?php
@@ -203,7 +203,7 @@
 
                         </div>
                     </div>
-                    <!-- End of Dropdown Box -->
+                    <!-- End of Dropdown Box -->--}}
                 </div>
             </div>
         </div>
@@ -272,12 +272,12 @@
                                 <a href="{{ route('category_product') }}">Shop</a>
                             </li>
 
-                            <li class="">
-                                <a href="">Blog</a>
+                            <li class="{{ request()->is('videos*') ? 'active' : '' }}">
+                                <a href="{{ route('videos') }}">Videos</a>
                             </li>
 
-                            <li class="">
-                                <a href="">Contact US</a>
+                            <li class="{{ request()->is('contact-us') ? 'active' : '' }}">
+                                <a href="{{ route('contact_us') }}">Contact US</a>
                             </li>
 
                             @if(!\Illuminate\Support\Facades\Auth::check())
@@ -306,7 +306,7 @@
                     </nav>
                 </div>
                 <div class="header-right">
-                    <a href="javascript:void(0)" class="d-xl-show scrollDiv"><i class="w-icon-map-marker mr-1"></i>Track Order</a>
+                    <a href="{{ route('user.order_list') }}" class="d-xl-show scrollDiv"><i class="w-icon-map-marker mr-1"></i>Track Order</a>
                     <a href="javascript:void(0)" onclick="scrollToDiv()"><i class="w-icon-sale"></i>Daily Deals</a>
                 </div>
             </div>
@@ -352,10 +352,10 @@
                         <a style="color:{{ request()->is('product*') ? '#1914fe' : '' }} " href="{{ route('category_product') }}">Shop</a>
                     </li>
                     <li class="">
-                        <a href="">Blog</a>
+                        <a style="color:{{ request()->is('videos*') ? '#1914fe' : '' }} " href="{{ route('videos') }}">Videos</a>
                     </li>
                     <li class="">
-                        <a href="">Contact US</a>
+                        <a style="color:{{ request()->is('contact-us') ? '#1914fe' : '' }} " href="{{ route('contact_us') }}">Contact US</a>
                     </li>
 
                     @if(!\Illuminate\Support\Facades\Auth::check())

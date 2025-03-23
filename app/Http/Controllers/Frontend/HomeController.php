@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\Contact;
 use App\Models\Coupon;
 use App\Models\DynamicPage;
 use App\Models\Order;
@@ -15,7 +16,9 @@ use App\Models\ProductAttribute;
 use App\Models\PromotionalCategory;
 use App\Models\Slider;
 use App\Models\Subcategory;
+use App\Models\Subscribe;
 use App\Models\Transaction;
+use App\Models\Video;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,8 +33,8 @@ class HomeController extends Controller
         $data['sliders'] = Slider::get();
         $data['hot_deals'] = Product::with('attributes', 'product_colors', 'product_galleries','rating')->where('status', 1)
             ->where('hot_deals', 1)->orderBy('updated_at', 'desc')->take(10)->get();
-        $data['new_arrivals'] = Product::with('rating')->where('status', 1)->latest()->take(10)->get();
-        $data['best_sells'] = Product::with('rating')->where('status', 1)
+        $data['new_arrivals'] = Product::with('rating', 'check_wish')->where('status', 1)->latest()->take(10)->get();
+        $data['best_sells'] = Product::with('rating', 'check_wish')->where('status', 1)
             ->whereHas('order_products.order', function($q) {
                 $q->where('status', 'delivered'); // Filter orders with 'delivered' status
             })
@@ -44,12 +47,12 @@ class HomeController extends Controller
             ->take(10)->get();
 
 
-        $data['featured_products'] = Product::with('rating')->where('status', 1)
+        $data['featured_products'] = Product::with('rating', 'check_wish')->where('status', 1)
             ->where('is_featured', 1)->orderBy('updated_at', 'desc')->take(10)->get();
 
         $data['home_categories'] = Category::with([
             'active_products' => function ($query) {
-                $query->latest()->limit(10)->with('rating');
+                $query->latest()->limit(10)->with('rating', 'check_wish');
             }
         ])->where(['status' => 1, 'show_home_page' => 1])->get();
 
@@ -60,12 +63,14 @@ class HomeController extends Controller
 
         $data['coupon'] = Coupon::active()->first();
 
+        $data['videos'] = Video::latest()->take(4)->get();
+
         return view('frontend.home', $data);
     }
 
     public function product_details($slug)
     {
-        $product = Product::with('category', 'subcategory', 'brand', 'attributes', 'product_colors', 'product_galleries', 'reviews.user', 'rating')
+        $product = Product::with('category', 'subcategory', 'brand', 'attributes', 'product_colors', 'product_galleries', 'reviews.user', 'rating', 'check_wish')
             ->where('slug', $slug)
             ->where('status', 1)
             ->firstOrFail();
@@ -101,6 +106,15 @@ class HomeController extends Controller
         }
 
         return view('frontend.product.product_details', compact('product','chunked_more_products', 'review_info'));
+    }
+
+    public function quick_view($slug)
+    {
+        $product = Product::with('category', 'subcategory', 'brand', 'attributes', 'product_colors', 'product_galleries', 'reviews.user', 'rating', 'check_wish')
+            ->where('slug', $slug)
+            ->where('status', 1)
+            ->firstOrFail();
+        return view('frontend.product.quick_view', compact('product'));
     }
 
     public function add_to_card(Request $request, $id)
@@ -369,7 +383,7 @@ class HomeController extends Controller
         $subcategory_slug = $request->subcategory;
         $category = Category::with('active_subcategories')->where('status', 1)->where('slug', $category_slug)->first();
         $subcategory = Subcategory::where('status', 1)->where('slug', $subcategory_slug)->first();
-        $products = Product::with('category', 'rating');
+        $products = Product::with('category', 'rating', 'check_wish');
         if ($category != null){
             $products = $products->where('category_id', $category->id);
         }
@@ -402,6 +416,54 @@ class HomeController extends Controller
     {
         $page = DynamicPage::where('status', 1)->where('slug', $slug)->first();
         return view('frontend.dynamic_page', compact('page'));
+    }
+
+    public function contact_us()
+    {
+        return view('frontend.contact_us');
+    }
+
+    public function contact_store(Request $request)
+    {
+        if ($request->name == '' || $request->email == '' || $request->message == ''){
+            notify()->error('Validation failed', 'Error');
+            return redirect()->back();
+        }
+
+        $contact = new Contact();
+        $contact->name = $request->name;
+        $contact->email = $request->email;
+        $contact->message = $request->message;
+        $contact->save();
+
+        notify()->success('Contact request submitted.', 'Success');
+        return redirect()->back();
+    }
+
+    public function subscribe(Request $request)
+    {
+        if ($request->email == ''){
+            notify()->error('Email is required', 'Error');
+            return redirect()->back();
+        }
+
+        $check = Subscribe::where('email', $request->email)->count();
+        if ($check > 0){
+            notify()->error("You're already subscribed to our newsletter!", 'Error');
+            return redirect()->back();
+        }
+
+        $subscribe = new Subscribe();
+        $subscribe->email = $request->email;
+        $subscribe->save();
+        notify()->success('Thank you for subscribing to our newsletter!', 'Success');
+        return redirect()->back();
+    }
+
+    public function videos()
+    {
+        $videos = Video::latest()->paginate(9);
+        return view('frontend.videos', compact('videos'));
     }
 
 }

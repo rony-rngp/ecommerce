@@ -147,7 +147,7 @@
                                     <div class="row">
                                         <div class="mb-4 col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label" for="logo">Logo <i class="text-danger">*</i></label>
+                                                <label class="form-label" for="logo">Logo (Width:144px Height:45px) <i class="text-danger">*</i></label>
                                                 <input type="file" class="form-control" accept="image/*"  name="logo" id="logo" >
                                                 <span class="text-danger">{{ $errors->has('logo') ? $errors->first('logo') : '' }}</span>
                                             </div>

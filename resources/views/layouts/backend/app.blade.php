@@ -263,6 +263,46 @@
     }
 </script>
 
+<script>
+    !function ($) {
+        $.fn.mirrorSlug = function (options) {
+            function transformText(text) {
+                return settings.textTransform === "lowercase" ? text.toLowerCase() :
+                    settings.textTransform === "uppercase" ? text.toUpperCase() : text;
+            }
+
+            function generateSlug(text) {
+                return text
+                    .toLowerCase() // Convert to lowercase
+                    .replace(/[\u0300-\u036f]/g, '') // Remove accents
+                    .replace(/[^\w\u0980-\u09FF\s-]/g, '') // Allow Bangla & English characters only
+                    .replace(/[\s_-]+/g, '-') // Replace spaces, underscores with hyphens
+                    .replace(/^-+|-+$/g, ''); // Trim hyphens from start and end
+            }
+
+            var settings = $.extend({
+                prefix: "",
+                textTransform: "lowercase",
+                output: ".output-slug",
+                seoURL: true
+            }, options);
+
+            return this.each(function () {
+                var $input = $(this);
+                var $output = $(settings.output);
+
+                function updateSlug() {
+                    var text = transformText($input.val());
+                    if (settings.seoURL) text = generateSlug(text);
+                    $output.val(settings.prefix + text);
+                }
+
+                $input.on("keyup keydown", updateSlug);
+            });
+        };
+    }(jQuery);
+</script>
+
 @stack('js')
 
 </body>

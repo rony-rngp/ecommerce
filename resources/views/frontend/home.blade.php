@@ -25,6 +25,10 @@
             }
         }
     </style>
+    <style>
+        .playBtn{ position: absolute; top: 38%; left: 45%; height: 50px; width: 50px; background: #0000007d; border-radius: 50%}
+        .playBtn .platIcon{font-size: 20px; top: 15px; right: 15px; position: absolute; color: white}
+    </style>
 @endpush
 
 @section('content')
@@ -120,7 +124,7 @@
                                     <i class="w-icon-truck"></i>
                                 </span>
                         <div class="icon-box-content">
-                            <h4 class="icon-box-title font-weight-bold mb-1">Free Shipping & Returns</h4>
+                            <h4 class="icon-box-title font-weight-bold mb-1"> Shipping Charge</h4>
                             <p class="text-default"> In Dhaka {{ get_settings('in_dhaka').' '.base_currency_name() }} and outside {{ get_settings('outside_dhaka').' '.base_currency_name() }}</p>
                         </div>
                     </div>
@@ -263,10 +267,9 @@
                                              width="300" height="338"/>
                                     </a>
                                     <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"
+                                        <a href="javascript:void(0)" onclick="addWishlist('{{ $product->id }}')" class="btn-product-icon btn-wishlist {{ $product->check_wish ? 'w-icon-heart-full' : 'w-icon-heart' }}  wish_{{ $product->id }}"
                                            title="Add to wishlist"></a>
-                                        <a href="#" class="btn-product-icon btn-quickview w-icon-search"
-                                           title="Quickview"></a>
+                                        <a href="{{ route('quick_view', $product->slug) }}" class="btn-product-icon quick_view w-icon-search" title="Quickview"></a>
                                         <a href="{{ route('product_details', $product->slug) }}" class="btn-product-icon btn-compare w-icon-cart"
                                            title="Add to Cart"></a>
                                     </div>
@@ -311,9 +314,9 @@
                                              width="300" height="338"/>
                                     </a>
                                     <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"
+                                        <a href="javascript:void(0)" onclick="addWishlist('{{ $product->id }}')" class="btn-product-icon btn-wishlist {{ $product->check_wish ? 'w-icon-heart-full' : 'w-icon-heart' }}  wish_{{ $product->id }}"
                                            title="Add to wishlist"></a>
-                                        <a href="#" class="btn-product-icon btn-quickview w-icon-search"
+                                        <a href="{{ route('quick_view', $product->slug) }}" class="btn-product-icon quick_view w-icon-search"
                                            title="Quickview"></a>
                                         <a href="{{ route('product_details', $product->slug) }}" class="btn-product-icon btn-compare w-icon-cart"
                                            title="Add to Cart"></a>
@@ -359,9 +362,9 @@
                                              width="300" height="338"/>
                                     </a>
                                     <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"
+                                        <a href="javascript:void(0)" onclick="addWishlist('{{ $product->id }}')" class="btn-product-icon btn-wishlist {{ $product->check_wish ? 'w-icon-heart-full' : 'w-icon-heart' }}  wish_{{ $product->id }}"
                                            title="Add to wishlist"></a>
-                                        <a href="#" class="btn-product-icon btn-quickview w-icon-search"
+                                        <a href="{{ route('quick_view', $product->slug) }}" class="btn-product-icon quick_view w-icon-search"
                                            title="Quickview"></a>
                                         <a href="{{ route('product_details', $product->slug) }}" class="btn-product-icon btn-compare w-icon-cart"
                                            title="Add to Cart"></a>
@@ -464,9 +467,9 @@
                                                              width="216" height="243" />
                                                     </a>
                                                     <div class="product-action-vertical">
-                                                        <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"
+                                                        <a href="javascript:void(0)" onclick="addWishlist('{{ $product->id }}')" class="btn-product-icon btn-wishlist {{ $product->check_wish ? 'w-icon-heart-full' : 'w-icon-heart' }}  wish_{{ $product->id }}"
                                                            title="Add to wishlist"></a>
-                                                        <a href="#" class="btn-product-icon btn-quickview w-icon-search"
+                                                        <a href="{{ route('quick_view', $product->slug) }}" class="btn-product-icon quick_view w-icon-search"
                                                            title="Quickview"></a>
                                                         <a href="{{ route('product_details', $product->slug) }}" class="btn-product-icon btn-compare w-icon-cart"
                                                            title="Add to Cart"></a>
@@ -575,11 +578,13 @@
         </div>
         <!-- End of Brands Wrapper -->
 
+         @if(count($videos) > 0)
         <div class="post-wrapper appear-animate mb-4">
             <div class="title-link-wrapper pb-1 mb-4">
-                <h2 class="title ls-normal mb-0">From Our Blog</h2>
-                <a href="blog-listing.html" class="font-weight-bold font-size-normal">View All Articles</a>
+                <h2 class="title ls-normal mb-0">From Our Videos</h2>
+                <a href="{{ route('videos') }}" class="font-weight-bold font-size-normal">View All Videos</a>
             </div>
+
             <div class="swiper">
                 <div class="swiper-container swiper-theme" data-swiper-options="{
                             'slidesPerView': 1,
@@ -596,88 +601,36 @@
                                 }
                             }
                         }">
+
                     <div class="swiper-wrapper row cols-lg-4 cols-md-3 cols-sm-2 cols-1">
+                        @foreach($videos as $video)
                         <div class="swiper-slide post text-center overlay-zoom">
                             <figure class="post-media br-sm">
-                                <a href="post-single.html">
-                                    <img src="{{ asset('frontend') }}/assets/images/demos/demo1/blogs/1.jpg" alt="Post" width="280"
+                                <a>
+                                    <img src="{{ asset('storage/'.$video->image) }}" alt="Post" width="280"
                                          height="180" style="background-color: #4b6e91;" />
+                                    <a  href="{{ $video->youtube_url }}" class="playBtn playVideo">
+                                        <i class="fas fa-play platIcon"></i>
+                                    </a>
                                 </a>
                             </figure>
                             <div class="post-details">
                                 <div class="post-meta">
-                                    by <a href="#" class="post-author">John Doe</a>
-                                    - <a href="#" class="post-date mr-0">03.05.2021</a>
+                                    by {{ $video->post_by }} - {{ date('d.m.Y', strtotime($video->created_at)) }}
                                 </div>
-                                <h4 class="post-title"><a href="post-single.html">Aliquam tincidunt mauris
-                                        eurisus</a>
-                                </h4>
-                                <a href="post-single.html" class="btn btn-link btn-dark btn-underline">Read
-                                    More<i class="w-icon-long-arrow-right"></i></a>
+                                <h4 class="post-title">{{ $video->title }}</h4>
+                                <a href="{{ $video->youtube_url }}" class="btn btn-link btn-dark btn-underline playVideo">Play Video<i class="w-icon-long-arrow-right"></i></a>
                             </div>
                         </div>
-                        <div class="swiper-slide post text-center overlay-zoom">
-                            <figure class="post-media br-sm">
-                                <a href="post-single.html">
-                                    <img src="{{ asset('frontend') }}/assets/images/demos/demo1/blogs/2.jpg" alt="Post" width="280"
-                                         height="180" style="background-color: #cec9cf;" />
-                                </a>
-                            </figure>
-                            <div class="post-details">
-                                <div class="post-meta">
-                                    by <a href="#" class="post-author">John Doe</a>
-                                    - <a href="#" class="post-date mr-0">03.05.2021</a>
-                                </div>
-                                <h4 class="post-title"><a href="post-single.html">Cras ornare tristique elit</a>
-                                </h4>
-                                <a href="post-single.html" class="btn btn-link btn-dark btn-underline">Read
-                                    More<i class="w-icon-long-arrow-right"></i></a>
-                            </div>
-                        </div>
-                        <div class="swiper-slide post text-center overlay-zoom">
-                            <figure class="post-media br-sm">
-                                <a href="post-single.html">
-                                    <img src="{{ asset('frontend') }}/assets/images/demos/demo1/blogs/3.jpg" alt="Post" width="280"
-                                         height="180" style="background-color: #c9c7bb;" />
-                                </a>
-                            </figure>
-                            <div class="post-details">
-                                <div class="post-meta">
-                                    by <a href="#" class="post-author">John Doe</a>
-                                    - <a href="#" class="post-date mr-0">03.05.2021</a>
-                                </div>
-                                <h4 class="post-title"><a href="post-single.html">Vivamus vestibulum ntulla nec
-                                        ante</a>
-                                </h4>
-                                <a href="post-single.html" class="btn btn-link btn-dark btn-underline">Read
-                                    More<i class="w-icon-long-arrow-right"></i></a>
-                            </div>
-                        </div>
-                        <div class="swiper-slide post text-center overlay-zoom">
-                            <figure class="post-media br-sm">
-                                <a href="post-single.html">
-                                    <img src="{{ asset('frontend') }}/assets/images/demos/demo1/blogs/4.jpg" alt="Post" width="280"
-                                         height="180" style="background-color: #d8dce0;" />
-                                </a>
-                            </figure>
-                            <div class="post-details">
-                                <div class="post-meta">
-                                    by <a href="#" class="post-author">John Doe</a>
-                                    - <a href="#" class="post-date mr-0">03.05.2021</a>
-                                </div>
-                                <h4 class="post-title"><a href="post-single.html">Fusce lacinia arcuet nulla</a>
-                                </h4>
-                                <a href="post-single.html" class="btn btn-link btn-dark btn-underline">Read
-                                    More<i class="w-icon-long-arrow-right"></i></a>
-                            </div>
-                        </div>
+                        @endforeach
+
                     </div>
                     <div class="swiper-pagination"></div>
                 </div>
             </div>
         </div>
         <!-- Post Wrapper -->
-
+        @endif
     <!--End of Catainer -->
         </div>
 

@@ -250,20 +250,7 @@
 
     <script>
 
-        $('#name').on('keyup', function() {
-            // Get the value of the title input
-            var title = $(this).val();
-
-            // Convert the title to a slug
-            var slug = title
-                .toLowerCase() // Convert to lowercase
-                .replace(/[^\w\s-]/g, '') // Remove special characters
-                .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
-                .replace(/^-+|-+$/g, ''); // Trim hyphens from the start and end
-
-            // Set the slug input value
-            $('#slug').val(slug);
-        });
+        $("#name").mirrorSlug({ output: "#slug", prefix: "", textTransform: "lowercase", seoURL: true });
 
         $(document).on('change', '#category_id', function () {
 
