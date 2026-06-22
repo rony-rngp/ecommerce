@@ -127,6 +127,18 @@
                                 </div>
 
                                 <div class="col-md-6 mb-4">
+                                    <label class="form-label" for="new_user_bonus">Refer New User Bonus ({{ get_settings('currency_name') }}) <i class="text-danger">*</i></label>
+                                    <input type="number" class="form-control" name="new_user_bonus" id="new_user_bonus" value="{{ get_settings('new_user_bonus') }}" required >
+                                    <span class="text-danger">{{ $errors->has('new_user_bonus') ? $errors->first('new_user_bonus') : '' }}</span>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label" for="total_order_amount_referral">Total order amount for referral balance withdrawal ({{ get_settings('currency_name') }}) <i class="text-danger">*</i></label>
+                                    <input type="number" class="form-control" name="total_order_amount_referral" id="total_order_amount_referral" value="{{ get_settings('total_order_amount_referral') }}" required >
+                                    <span class="text-danger">{{ $errors->has('total_order_amount_referral') ? $errors->first('total_order_amount_referral') : '' }}</span>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
                                     <label class="form-label" for="min_convert_amount">Minimum Convert Amount <i class="text-danger">*</i></label>
                                     <input type="number" class="form-control" name="min_convert_amount" id="min_convert_amount" value="{{ get_settings('min_convert_amount') }}" required >
                                     <span class="text-danger">{{ $errors->has('min_convert_amount') ? $errors->first('min_convert_amount') : '' }}</span>

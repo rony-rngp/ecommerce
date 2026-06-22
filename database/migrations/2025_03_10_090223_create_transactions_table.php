@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->string('tran_type'); // deposit, place_order, refer_bonus, convert_balance, added_converted_balance
+            $table->string('tran_type'); // deposit, place_order, refer_bonus, convert_balance, added_converted_balance, new_user_referral
             $table->text('description');
             $table->string('amount_type');
             $table->string('amount');

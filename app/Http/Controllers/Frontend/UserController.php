@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\WithdrawMethod;
@@ -31,7 +32,7 @@ class UserController extends Controller
         $users = null;
         $convert_logs = null;
         if ($type == ''){
-            $users = User::withCount('delivered_orders')->where('refer_by', Auth::user()->id)->paginate(10);
+            $users = User::withSum('delivered_orders', 'grand_total')->withCount('delivered_orders')->where('refer_by', Auth::user()->id)->paginate(10);
         }else if ($type == 'convert_log'){
             $convert_logs = Transaction::where('user_id', Auth::user()->id)->where('tran_type', 'convert_balance')->orderBy('id', 'desc')->paginate(10);
         }else{
@@ -52,6 +53,18 @@ class UserController extends Controller
 
             if ($request->amount < get_settings('min_convert_amount')){
                 notify()->error('Minimum convert amount '.get_settings('min_convert_amount').' '.base_currency_name());
+                return redirect()->back();
+            }
+
+            $total_refer_grand_total = Order::whereHas('user', function ($query) {
+                $query->where('refer_by', Auth::user()->id);  // Filter users referred by the current authenticated user
+            })
+                ->where('status', 'Delivered')  // Only include orders with status 'Delivered'
+                ->sum('grand_total');
+
+            if(get_settings('total_order_amount_referral') > $total_refer_grand_total ){
+                $msg = "You can't convert your amount until your referral places an order of at least ". get_settings('total_order_amount_referral').get_settings('currency_name');
+                notify()->error($msg);
                 return redirect()->back();
             }
 

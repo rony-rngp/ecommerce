@@ -54,7 +54,7 @@
                                     <p class="mb-0 text-dark" style="font-size: 17px; font-weight: bold">Current Refer Earning: {{ auth()->user()->refer_balance.' '.base_currency_name() }}</p>
                                     <p class="mb-0 text-dark" style="font-size: 17px; font-weight: bold"> Main Balance: {{ auth()->user()->balance.' '.base_currency_name() }}</p>
                                     <p class="mb-0 text-dark" style="font-size: 17px; font-weight: bold">Refer Code: {{ Auth::user()->refer_code }}</p>
-                                    <p class="mb-0 text-dark" style="font-size: 17px; font-weight: bold">Refer Url: <a target="_blank" href="{{ route('register') }}?refer_code={{ Auth::user()->refer_code }}">Refer Url</a></p>
+                                    <p class="mb-0 text-dark" style="font-size: 17px; font-weight: bold">Refer Url: <a target="_blank" href="{{ route('register') }}?refer_code={{ Auth::user()->refer_code }}">Refer Url</a> </p>
                                 </div>
                                 <div>
                                     <a href="{{ route('user.my_refer') }}" class="btn btn-primary btn-sm mb-1">Refer Earning</a>
@@ -94,7 +94,7 @@
                                                 <span class="d-block">{{ $user->email }}</span>
                                             </td>
                                             <td class="text-center">
-                                                {{ $user->delivered_orders_count }}
+                                                {{ $user->delivered_orders_count }} &nbsp;({{ $user->delivered_orders_sum_grand_total ?? 0 }} {{ base_currency_name() }})
                                             </td>
                                             <td class="text-center">
                                                 @php($earning = \App\Models\Transaction::where(['tran_type' => 'refer_bonus', 'user_id' => auth()->user()->id, 'main_user' => $user->id])->sum('amount'))
@@ -180,7 +180,7 @@
                     <div class="">
                         <h4>Add Withdraw</h4>
                         <hr>
-
+                        <p style="color: red" class="mb-1">You can't withdraw your amount until your referral places an order of at least {{ get_settings('total_order_amount_referral') }} {{ get_settings('currency_name') }}.</p>
                         <form action="{{ route('user.withdraw_store') }}" method="post" id="store_deposit">
                             @csrf
                             <div class="form-group">

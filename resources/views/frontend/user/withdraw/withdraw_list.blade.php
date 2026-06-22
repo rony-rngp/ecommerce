@@ -134,7 +134,7 @@
         <div class="">
             <h4>Add Withdraw</h4>
             <hr>
-
+            <p style="color: red" class="mb-1">You can't withdraw your amount until your referral places an order of at least {{ get_settings('total_order_amount_referral') }} {{ get_settings('currency_name') }}.</p>
             <form action="{{ route('user.withdraw_store') }}" method="post" id="store_deposit">
                 @csrf
                 <div class="form-group">

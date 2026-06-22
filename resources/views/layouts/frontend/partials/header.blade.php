@@ -364,7 +364,7 @@
                         </li>
 
                         <li>
-                            <a style="color:{{ request()->is('register') ? '#1914fe' : '' }}" href="{{ route('register') }}?refer_code=UPN4YES0">Register</a>
+                            <a style="color:{{ request()->is('register') ? '#1914fe' : '' }}" href="{{ route('register') }}">Register</a>
                         </li>
                     @else
                         <li>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Deposit;
 use App\Models\OfflinePaymentMethod;
+use App\Models\Order;
 use App\Models\Transaction;
 use App\Models\Withdraw;
 use App\Models\WithdrawMethod;
@@ -25,7 +26,6 @@ class WithdrawController extends Controller
 
     public function withdraw_store(Request $request)
     {
-
         $withdraw_method = WithdrawMethod::where('id', $request->payment_method)->first();
         if($withdraw_method == null){
             notify()->error('Withdraw method not found');
@@ -51,6 +51,18 @@ class WithdrawController extends Controller
 
         if(Auth::user()->refer_balance < $request->amount){
             notify()->error('You do not have enough balance');
+            return redirect()->back();
+        }
+
+        $total_refer_grand_total = Order::whereHas('user', function ($query) {
+            $query->where('refer_by', Auth::user()->id);  // Filter users referred by the current authenticated user
+        })
+            ->where('status', 'Delivered')  // Only include orders with status 'Delivered'
+            ->sum('grand_total');
+
+        if(get_settings('total_order_amount_referral') > $total_refer_grand_total ){
+            $msg = "You can't withdraw your amount until your referral places an order of at least ". get_settings('total_order_amount_referral').' '.get_settings('currency_name');
+            notify()->error($msg);
             return redirect()->back();
         }
 

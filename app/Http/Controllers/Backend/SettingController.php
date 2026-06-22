@@ -28,6 +28,8 @@ class SettingController extends Controller
                 'outside_dhaka' => 'required|numeric',
                 'allow_refer_income' => 'required|numeric',
                 'refer_income' => 'required|numeric',
+                'new_user_bonus' => 'required|numeric',
+                'total_order_amount_referral' => 'required|numeric',
                 'min_convert_amount' => 'required|numeric',
                 'min_withdraw_amount' => 'required|numeric',
                 'logo' => 'mimes:jpeg,jpg,png,gif,PNG|max:2048',
@@ -81,6 +83,12 @@ class SettingController extends Controller
             ]);
             Setting::updateOrInsert(['key' => 'refer_income'], [
                 'value' => $request['refer_income']
+            ]);
+            Setting::updateOrInsert(['key' => 'new_user_bonus'], [
+                'value' => $request['new_user_bonus']
+            ]);
+            Setting::updateOrInsert(['key' => 'total_order_amount_referral'], [
+                'value' => $request['total_order_amount_referral']
             ]);
             Setting::updateOrInsert(['key' => 'min_convert_amount'], [
                 'value' => $request['min_convert_amount']

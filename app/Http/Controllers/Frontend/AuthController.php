@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ForgotPassword;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -64,8 +65,28 @@ class AuthController extends Controller
                     $user->refer_by = $refer_user->id;
                 }
             }
-
             $user->save();
+
+            if ($request->refer_code != ''){
+                $refer_user = User::where('refer_code', $request->refer_code)->first();
+                if ($refer_user != null && get_settings('allow_refer_income') == 1){
+                    if (get_settings('new_user_bonus') > 0){
+                        $tran = new Transaction();
+                        $tran->user_id = $refer_user->id;
+                        $tran->tran_type = 'new_user_referral';
+                        $tran->description = 'Referral bonus earned by '.'('.$refer_user->name.')'.' referring '.'('.$request->name.').';
+                        $tran->amount_type = 'credit';
+                        $tran->amount = get_settings('new_user_bonus');
+                        $tran->reference = $user->id;
+                        $tran->save();
+
+                        $refer_user->refer_balance = $refer_user->refer_balance + get_settings('new_user_bonus');
+                        $refer_user->update();
+
+                    }
+                }
+
+            }
 
             Auth::login($user, true);
 
